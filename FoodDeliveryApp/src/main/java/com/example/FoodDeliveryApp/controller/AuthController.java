@@ -19,7 +19,12 @@ public class AuthController {
 
     @GetMapping("/register")
     public String registerPage(RegisterRequest request) {
+
         return "register";
+    }
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
 
     @PostMapping("/register")
