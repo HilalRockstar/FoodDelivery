@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Create Restaurant</h2>
+
+<form th:action="@{/admin/restaurants/create}"
+      method="post">
+
+    <input type="text"
+           name="name"
+           placeholder="Restaurant Name">
+
+    <br><br>
+
+    <input type="text"
+           name="description"
+           placeholder="Description">
+
+    <br><br>
+
+    <input type="text"
+           name="address"
+           placeholder="Address">
+
+    <br><br>
+
+    <input type="text"
+           name="phoneNumber"
+           placeholder="Phone Number">
+
+    <br><br>
+
+    <input type="text"
+           name="openingTime"
+           placeholder="Opening Time">
+
+    <br><br>
+
+    <input type="text"
+           name="closingTime"
+           placeholder="Closing Time">
+
+    <br><br>
+
+    <button type="submit">
+        Save
+    </button>
+
+</form>
+
+</body>
+</html>

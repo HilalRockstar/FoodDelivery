@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<h2>Restaurant List</h2>
+
+<div th:each="restaurant : ${restaurants}">
+
+    <h3 th:text="${restaurant.name}"></h3>
+
+</div>
+
+</body>
+</html>
