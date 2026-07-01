@@ -8,17 +8,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import com.example.FoodDeliveryApp.security.CustomLoginSuccessHandler;
 @Configuration
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-
+    private final CustomLoginSuccessHandler successHandler;
     public SecurityConfig(
-            CustomUserDetailsService customUserDetailsService) {
+            CustomUserDetailsService customUserDetailsService,
+            CustomLoginSuccessHandler successHandler) {
 
-        this.customUserDetailsService =
-                customUserDetailsService;
+        this.customUserDetailsService = customUserDetailsService;
+        this.successHandler = successHandler;
     }
 
     @Bean
@@ -68,7 +69,7 @@ public class SecurityConfig {
 
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/user/dashboard", true)
+                        .successHandler(successHandler)
                         .permitAll()
                 )
 
