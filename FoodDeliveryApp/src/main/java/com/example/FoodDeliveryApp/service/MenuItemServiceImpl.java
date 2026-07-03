@@ -47,14 +47,19 @@ public class MenuItemServiceImpl
 
         return mapToResponse(saved);
     }
-
     @Override
-    public List<MenuItemResponse> getAllMenuItems() {
+    public List<MenuItemResponse> getMenuItemsByRestaurant(
+            Long restaurantId) {
 
-        return menuItemRepository.findAll()
+        Restaurant restaurant = restaurantRepository
+                .findById(restaurantId)
+                .orElseThrow(() ->
+                        new RuntimeException("Restaurant not found"));
+
+        return menuItemRepository.findByRestaurant(restaurant)
                 .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

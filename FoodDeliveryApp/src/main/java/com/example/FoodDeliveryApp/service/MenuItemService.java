@@ -10,7 +10,7 @@ public interface MenuItemService {
     MenuItemResponse createMenuItem(
             MenuItemRequest request);
 
-    List<MenuItemResponse> getAllMenuItems();
+    List<MenuItemResponse>getMenuItemsByRestaurant(Long restaurantId);
 
     MenuItemResponse getMenuItemById(
             Long id);

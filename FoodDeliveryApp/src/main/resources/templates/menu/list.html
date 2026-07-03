@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Restaurants</title>
+</head>
+<body>
+
+<h2>Restaurant List</h2>
+
+<br>
+
+<a th:href="@{/admin/restaurants/create}">
+    Add Restaurant
+</a>
+
+<br><br>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="restaurant : ${restaurants}">
+
+        <td th:text="${restaurant.id}"></td>
+
+        <td th:text="${restaurant.name}"></td>
+
+        <td th:text="${restaurant.address}"></td>
+
+        <td th:text="${restaurant.phoneNumber}"></td>
+
+        <td>
+
+            <a th:href="@{/admin/restaurants/{id}(id=${restaurant.id})}">
+                View
+            </a>
+
+            |
+
+            <a th:href="@{/admin/menu/{restaurantId}(restaurantId=${restaurant.id})}">
+                Menu
+            </a>
+
+            |
+
+            <a th:href="@{/admin/restaurants/delete/{id}(id=${restaurant.id})}">
+                Delete
+            </a>
+
+        </td>
+
+    </tr>
+
+</table>
+
+</body>
+</html>
