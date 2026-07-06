@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Restaurants</title>
+    <title>Menu Items</title>
 </head>
 <body>
 
-<h2>Restaurant List</h2>
+<h2>Menu Items</h2>
 
 <br>
 
-<a th:href="@{/admin/restaurants/create}">
-    Add Restaurant
+<a th:href="@{/admin/menu/create/{restaurantId}(restaurantId=${restaurantId})}">
+    Add Menu Item
 </a>
 
 <br><br>
@@ -20,44 +20,39 @@
     <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Address</th>
-        <th>Phone Number</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Available</th>
         <th>Action</th>
     </tr>
 
-    <tr th:each="restaurant : ${restaurants}">
+    <tr th:each="menu : ${menuItems}">
 
-        <td th:text="${restaurant.id}"></td>
+        <td th:text="${menu.id}"></td>
 
-        <td th:text="${restaurant.name}"></td>
+        <td th:text="${menu.name}"></td>
 
-        <td th:text="${restaurant.address}"></td>
+        <td th:text="${menu.description}"></td>
 
-        <td th:text="${restaurant.phoneNumber}"></td>
+        <td th:text="${menu.price}"></td>
+
+        <td th:text="${menu.available}"></td>
 
         <td>
-
-            <a th:href="@{/admin/restaurants/{id}(id=${restaurant.id})}">
-                View
-            </a>
-
-            |
-
-            <a th:href="@{/admin/menu/{restaurantId}(restaurantId=${restaurant.id})}">
-                Menu
-            </a>
-
-            |
-
-            <a th:href="@{/admin/restaurants/delete/{id}(id=${restaurant.id})}">
+            <a th:href="@{/admin/menu/delete/{id}/{restaurantId}(id=${menu.id},restaurantId=${restaurantId})}">
                 Delete
             </a>
-
         </td>
 
     </tr>
 
 </table>
+
+<br><br>
+
+<a th:href="@{/admin/restaurants}">
+    ← Back to Restaurants
+</a>
 
 </body>
 </html>

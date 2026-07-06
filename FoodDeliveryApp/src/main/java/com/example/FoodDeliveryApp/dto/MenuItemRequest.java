@@ -20,4 +20,5 @@ public class MenuItemRequest {
     private Double price;
 
     private Long restaurantId;
+    private boolean available;
 }
