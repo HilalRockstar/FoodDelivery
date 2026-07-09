@@ -1,20 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>My Cart</title>
+</head>
+
 <body>
 
 <h2>My Cart</h2>
 
-<div th:each="item : ${cartItems}">
+<table border="1">
 
-    <h3 th:text="${item.menuItemName}"></h3>
+    <tr>
+        <th>Food</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Action</th>
+    </tr>
 
-    <p th:text="${item.price}"></p>
+    <tr th:each="cart : ${cartItems}">
 
-    <p th:text="${item.quantity}"></p>
+        <td th:text="${cart.menuItem.name}"></td>
 
-    <p th:text="${item.totalPrice}"></p>
+        <td th:text="${cart.menuItem.price}"></td>
 
-</div>
+        <td th:text="${cart.quantity}"></td>
+
+        <td th:text="${cart.menuItem.price * cart.quantity}"></td>
+
+        <td>
+
+            <a th:href="@{/user/cart/remove/{id}(id=${cart.id})}">
+                Remove
+            </a>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<br><br>
+
+<a th:href="@{/user/restaurants}">
+    ← Continue Shopping
+</a>
+
+<br><br>
+
+<a th:href="@{/user/cart/clear}">
+    Clear Cart
+</a>
+
+<br><br>
+
+<form th:action="@{/orders/place}" method="post">
+    <button type="submit">
+        Place Order
+    </button>
+</form>
 
 </body>
+
 </html>

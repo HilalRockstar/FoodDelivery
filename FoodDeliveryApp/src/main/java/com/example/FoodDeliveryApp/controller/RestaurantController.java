@@ -12,7 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin/restaurants")
+@RequestMapping("/admin/restaurants.html")
 @RequiredArgsConstructor
 public class RestaurantController {
 
@@ -22,7 +22,7 @@ public class RestaurantController {
     public String getAllRestaurants(Model model) {
 
         model.addAttribute(
-                "restaurants",
+                "restaurants.html",
                 restaurantService.getAllRestaurants()
         );
 
@@ -47,7 +47,7 @@ public class RestaurantController {
 
         restaurantService.createRestaurant(request);
 
-        return "redirect:/admin/restaurants";
+        return "redirect:/admin/restaurants.html";
     }
 
     @GetMapping("/{id}")
@@ -69,6 +69,6 @@ public class RestaurantController {
 
         restaurantService.deleteRestaurant(id);
 
-        return "redirect:/admin/restaurants";
+        return "redirect:/admin/restaurants.html";
     }
 }

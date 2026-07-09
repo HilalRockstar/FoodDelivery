@@ -1,18 +1,21 @@
 package com.example.FoodDeliveryApp.service;
 
-import com.example.FoodDeliveryApp.dto.CartRequest;
-import com.example.FoodDeliveryApp.dto.CartResponse;
+import com.example.FoodDeliveryApp.entity.CartItem;
 
 import java.util.List;
 
 public interface CartService {
 
-    CartResponse addToCart(
-            CartRequest request,
+    void addToCart(
+            Long menuItemId,
             String email);
 
-    List<CartResponse> getCartItems(
+    List<CartItem> getMyCart(
             String email);
 
-    void removeCartItem(Long cartItemId);
+    void removeFromCart(
+            Long cartItemId);
+
+    void clearCart(
+            String email);
 }

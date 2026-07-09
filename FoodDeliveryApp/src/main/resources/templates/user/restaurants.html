@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Restaurants</title>
+</head>
+
+<body>
+
+<h2>Available Restaurants</h2>
+
+<br>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="restaurant : ${restaurants}">
+
+        <td th:text="${restaurant.id}"></td>
+
+        <td th:text="${restaurant.name}"></td>
+
+        <td th:text="${restaurant.address}"></td>
+
+        <td th:text="${restaurant.phoneNumber}"></td>
+
+        <td>
+
+            <a th:href="@{/user/menu/{restaurantId}(restaurantId=${restaurant.id})}">
+                View Menu
+            </a>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<br><br>
+
+<a th:href="@{/user/dashboard}">
+    ← Back to Dashboard
+</a>
+
+</body>
+</html>

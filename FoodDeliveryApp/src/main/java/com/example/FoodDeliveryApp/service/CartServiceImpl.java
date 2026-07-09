@@ -1,25 +1,20 @@
 package com.example.FoodDeliveryApp.service;
 
-import com.example.FoodDeliveryApp.dto.CartRequest;
-import com.example.FoodDeliveryApp.dto.CartResponse;
 import com.example.FoodDeliveryApp.entity.CartItem;
 import com.example.FoodDeliveryApp.entity.MenuItem;
 import com.example.FoodDeliveryApp.entity.User;
 import com.example.FoodDeliveryApp.repository.CartItemRepository;
 import com.example.FoodDeliveryApp.repository.MenuItemRepository;
 import com.example.FoodDeliveryApp.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CartServiceImpl
-        implements CartService {
+public class CartServiceImpl implements CartService {
 
     private final CartItemRepository cartItemRepository;
 
@@ -28,80 +23,69 @@ public class CartServiceImpl
     private final MenuItemRepository menuItemRepository;
 
     @Override
-    public CartResponse addToCart(
-            CartRequest request,
-            String email) {
+    public void addToCart(Long menuItemId, String email) {
 
-        User user = userRepository
-                .findByEmail(email)
+        // Find User
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "User not found"));
+                        new RuntimeException("User not found"));
 
-        MenuItem menuItem =
-                menuItemRepository.findById(
-                                request.getMenuItemId())
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Menu Item not found"));
+        // Find Menu Item
+        MenuItem menuItem = menuItemRepository.findById(menuItemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Menu Item not found"));
 
-        CartItem cartItem =
-                CartItem.builder()
-                        .user(user)
-                        .menuItem(menuItem)
-                        .quantity(
-                                request.getQuantity())
-                        .build();
+        // Check if already exists in cart
+        Optional<CartItem> existingCartItem =
+                cartItemRepository.findByUserAndMenuItem(user, menuItem);
 
-        CartItem saved =
-                cartItemRepository.save(cartItem);
+        if (existingCartItem.isPresent()) {
 
-        return mapToResponse(saved);
+            CartItem cartItem = existingCartItem.get();
+
+            cartItem.setQuantity(
+                    cartItem.getQuantity() + 1);
+
+            cartItemRepository.save(cartItem);
+
+        } else {
+
+            CartItem cartItem = CartItem.builder()
+                    .user(user)
+                    .menuItem(menuItem)
+                    .quantity(1)
+                    .build();
+
+            cartItemRepository.save(cartItem);
+        }
     }
 
     @Override
-    public List<CartResponse> getCartItems(
-            String email) {
+    public List<CartItem> getMyCart(String email) {
 
-        User user = userRepository
-                .findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new RuntimeException(
-                                "User not found"));
+                        new RuntimeException("User not found"));
 
-        return cartItemRepository
-                .findByUser(user)
-                .stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        return cartItemRepository.findByUser(user);
     }
 
     @Override
-    public void removeCartItem(
-            Long cartItemId) {
+    public void removeFromCart(Long cartItemId) {
 
-        cartItemRepository
-                .deleteById(cartItemId);
+        cartItemRepository.deleteById(cartItemId);
     }
 
-    private CartResponse mapToResponse(
-            CartItem cartItem) {
+    @Override
+    public void clearCart(String email) {
 
-        double total =
-                cartItem.getMenuItem().getPrice()
-                        * cartItem.getQuantity();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
 
-        return CartResponse.builder()
-                .cartItemId(cartItem.getId())
-                .menuItemName(
-                        cartItem.getMenuItem()
-                                .getName())
-                .price(
-                        cartItem.getMenuItem()
-                                .getPrice())
-                .quantity(
-                        cartItem.getQuantity())
-                .totalPrice(total)
-                .build();
+        List<CartItem> cartItems =
+                cartItemRepository.findByUser(user);
+
+        cartItemRepository.deleteAll(cartItems);
     }
 }

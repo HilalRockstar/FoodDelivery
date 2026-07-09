@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Restaurant Menu</title>
+</head>
+
+<body>
+
+<h2>Restaurant Menu</h2>
+
+<table border="1">
+
+    <tr>
+        <th>ID</th>
+        <th>Food Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Available</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="menu : ${menuItems}">
+
+        <td th:text="${menu.id}"></td>
+
+        <td th:text="${menu.name}"></td>
+
+        <td th:text="${menu.description}"></td>
+
+        <td th:text="${menu.price}"></td>
+
+        <td th:text="${menu.available}"></td>
+
+        <td>
+
+            <a th:href="@{/user/cart/add/{id}(id=${menu.id})}">
+                Add To Cart
+            </a>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<br><br>
+
+<a th:href="@{/user/restaurants}">
+    ← Back to Restaurants
+</a>
+
+</body>
+</html>

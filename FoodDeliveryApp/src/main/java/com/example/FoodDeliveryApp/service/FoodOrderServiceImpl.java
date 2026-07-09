@@ -9,13 +9,14 @@ import com.example.FoodDeliveryApp.repository.CartItemRepository;
 import com.example.FoodDeliveryApp.repository.FoodOrderRepository;
 import com.example.FoodDeliveryApp.repository.OrderItemRepository;
 import com.example.FoodDeliveryApp.repository.UserRepository;
-import com.example.FoodDeliveryApp.service.FoodOrderService;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class FoodOrderServiceImpl implements FoodOrderService {
 
@@ -99,5 +100,21 @@ public class FoodOrderServiceImpl implements FoodOrderService {
                         new RuntimeException("User not found"));
 
         return foodOrderRepository.findByUserOrderByIdDesc(user);
+    }
+    @Override
+    public FoodOrder getOrderById(Long id) {
+
+        return foodOrderRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+    }
+    @Override
+    public List<OrderItem> getOrderItems(Long orderId) {
+
+        FoodOrder order = foodOrderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+
+        return orderItemRepository.findByFoodOrder(order);
     }
 }

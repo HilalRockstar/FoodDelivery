@@ -13,10 +13,10 @@ import lombok.*;
 public class CartItem {
 
     @Id
-    @GeneratedValue(strategy =
-            GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Quantity selected by user
     private Integer quantity;
 
     @ManyToOne
@@ -26,4 +26,5 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
+
 }

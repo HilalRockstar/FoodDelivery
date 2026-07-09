@@ -1,9 +1,7 @@
 package com.example.FoodDeliveryApp.controller;
-import com.example.FoodDeliveryApp.dto.CartRequest;
+
 import com.example.FoodDeliveryApp.service.CartService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,36 +14,52 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/add")
-    public String addToCart(
-            CartRequest request,
-            Authentication authentication) {
-
-        cartService.addToCart(
-                request,
-                authentication.getName());
-
-        return "redirect:/user/cart";
-    }
-
+    // View Cart
     @GetMapping
     public String viewCart(
             Authentication authentication,
             Model model) {
 
+        String email = authentication.getName();
+
         model.addAttribute(
                 "cartItems",
-                cartService.getCartItems(
-                        authentication.getName()));
+                cartService.getMyCart(email));
 
         return "cart/list";
     }
 
-    @GetMapping("/remove/{id}")
-    public String removeCartItem(
-            @PathVariable Long id) {
+    // Add To Cart
+    @GetMapping("/add/{menuItemId}")
+    public String addToCart(
+            @PathVariable Long menuItemId,
+            Authentication authentication) {
 
-        cartService.removeCartItem(id);
+        String email = authentication.getName();
+
+        cartService.addToCart(menuItemId, email);
+
+        return "redirect:/user/cart";
+    }
+
+    // Remove Cart Item
+    @GetMapping("/remove/{cartItemId}")
+    public String removeCartItem(
+            @PathVariable Long cartItemId) {
+
+        cartService.removeFromCart(cartItemId);
+
+        return "redirect:/user/cart";
+    }
+
+    // Clear Cart
+    @GetMapping("/clear")
+    public String clearCart(
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        cartService.clearCart(email);
 
         return "redirect:/user/cart";
     }
