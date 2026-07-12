@@ -23,7 +23,7 @@ public class CartServiceImpl implements CartService {
     private final MenuItemRepository menuItemRepository;
 
     @Override
-    public void addToCart(Long menuItemId, String email) {
+    public boolean addToCart(Long menuItemId, String email) {
 
         // Find User
         User user = userRepository.findByEmail(email)
@@ -35,7 +35,35 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() ->
                         new RuntimeException("Menu Item not found"));
 
-        // Check if already exists in cart
+        // ===============================
+        // Restaurant Validation
+        // ===============================
+
+        List<CartItem> cartItems = cartItemRepository.findByUser(user);
+
+        if (!cartItems.isEmpty()) {
+
+            Long existingRestaurantId =
+                    cartItems.get(0)
+                            .getMenuItem()
+                            .getRestaurant()
+                            .getId();
+
+            Long newRestaurantId =
+                    menuItem.getRestaurant()
+                            .getId();
+
+            if (!existingRestaurantId.equals(newRestaurantId)) {
+
+                return false;
+
+            }
+        }
+
+        // ===============================
+        // Existing Cart Item Check
+        // ===============================
+
         Optional<CartItem> existingCartItem =
                 cartItemRepository.findByUserAndMenuItem(user, menuItem);
 
@@ -43,8 +71,7 @@ public class CartServiceImpl implements CartService {
 
             CartItem cartItem = existingCartItem.get();
 
-            cartItem.setQuantity(
-                    cartItem.getQuantity() + 1);
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
 
             cartItemRepository.save(cartItem);
 
@@ -58,6 +85,8 @@ public class CartServiceImpl implements CartService {
 
             cartItemRepository.save(cartItem);
         }
+
+        return true;
     }
 
     @Override
@@ -87,5 +116,34 @@ public class CartServiceImpl implements CartService {
                 cartItemRepository.findByUser(user);
 
         cartItemRepository.deleteAll(cartItems);
+    }
+    @Override
+    public void increaseQuantity(Long cartItemId) {
+
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart Item not found"));
+
+        cartItem.setQuantity(cartItem.getQuantity() + 1);
+
+        cartItemRepository.save(cartItem);
+    }
+    @Override
+    public void decreaseQuantity(Long cartItemId) {
+
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart Item not found"));
+
+        if (cartItem.getQuantity() > 1) {
+
+            cartItem.setQuantity(cartItem.getQuantity() - 1);
+
+            cartItemRepository.save(cartItem);
+
+        } else {
+
+            cartItemRepository.delete(cartItem);
+        }
     }
 }

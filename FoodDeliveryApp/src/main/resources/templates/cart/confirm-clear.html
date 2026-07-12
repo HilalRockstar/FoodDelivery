@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Cart Clear</title>
+</head>
+
+<body>
+
+<h2>⚠️ Cart Conflict</h2>
+
+<hr>
+
+<p>
+    Your cart already contains items from another restaurant.
+</p>
+
+<p>
+    If you continue, your current cart will be cleared and the selected item
+    from the new restaurant will be added.
+</p>
+
+<br>
+
+<a th:href="@{/user/cart/clear-and-add/{id}(id=${menuItemId})}">
+    <button>
+        Clear Cart & Continue
+    </button>
+</a>
+
+&nbsp;&nbsp;
+
+<a th:href="@{/user/cart}">
+    <button>
+        Cancel
+    </button>
+</a>
+
+</body>
+</html>

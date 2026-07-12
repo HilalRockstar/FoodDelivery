@@ -25,7 +25,19 @@
 
         <td th:text="${cart.menuItem.price}"></td>
 
-        <td th:text="${cart.quantity}"></td>
+        <td>
+
+            <a th:href="@{/user/cart/decrease/{id}(id=${cart.id})}">
+                -
+            </a>
+
+            <span th:text="${cart.quantity}"></span>
+
+            <a th:href="@{/user/cart/increase/{id}(id=${cart.id})}">
+                +
+            </a>
+
+        </td>
 
         <td th:text="${cart.menuItem.price * cart.quantity}"></td>
 
@@ -36,7 +48,6 @@
             </a>
 
         </td>
-
     </tr>
 
 </table>

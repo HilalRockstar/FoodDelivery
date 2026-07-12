@@ -37,6 +37,39 @@ public class CartController {
 
         String email = authentication.getName();
 
+        boolean added =
+                cartService.addToCart(menuItemId, email);
+
+        if (!added) {
+
+            return "redirect:/user/cart/confirm-clear?menuItemId="
+                    + menuItemId;
+        }
+
+        return "redirect:/user/cart";
+    }
+
+    // Confirmation Page
+    @GetMapping("/confirm-clear")
+    public String confirmClear(
+            @RequestParam Long menuItemId,
+            Model model) {
+
+        model.addAttribute("menuItemId", menuItemId);
+
+        return "cart/confirm-clear";
+    }
+
+    // Clear Cart & Add New Item
+    @GetMapping("/clear-and-add/{menuItemId}")
+    public String clearAndAdd(
+            @PathVariable Long menuItemId,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        cartService.clearCart(email);
+
         cartService.addToCart(menuItemId, email);
 
         return "redirect:/user/cart";
@@ -48,6 +81,26 @@ public class CartController {
             @PathVariable Long cartItemId) {
 
         cartService.removeFromCart(cartItemId);
+
+        return "redirect:/user/cart";
+    }
+
+    // Increase Quantity
+    @GetMapping("/increase/{cartItemId}")
+    public String increaseQuantity(
+            @PathVariable Long cartItemId) {
+
+        cartService.increaseQuantity(cartItemId);
+
+        return "redirect:/user/cart";
+    }
+
+    // Decrease Quantity
+    @GetMapping("/decrease/{cartItemId}")
+    public String decreaseQuantity(
+            @PathVariable Long cartItemId) {
+
+        cartService.decreaseQuantity(cartItemId);
 
         return "redirect:/user/cart";
     }
