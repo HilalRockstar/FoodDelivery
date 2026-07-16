@@ -5,9 +5,13 @@ import com.example.FoodDeliveryApp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface FoodOrderRepository extends JpaRepository<FoodOrder, Long> {
+public interface FoodOrderRepository
+        extends JpaRepository<FoodOrder, Long> {
+
+    // User Orders
     List<FoodOrder> findByUserOrderByIdDesc(User user);
-    Optional<FoodOrder> findById(Long id);
+
+    // Admin - All Orders
+    List<FoodOrder> findAllByOrderByIdDesc();
 }

@@ -1,10 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>admin</title>
+    <title>Admin Dashboard</title>
 </head>
+
 <body>
+
 <h1>Admin Dashboard</h1>
+
+<hr>
+
+<h2>Management</h2>
+
+<ul>
+
+    <li>
+        <a th:href="@{/admin/restaurants}">
+            Manage Restaurants
+        </a>
+    </li>
+
+    <li>
+        <a th:href="@{/admin/orders}">
+            Manage Orders
+        </a>
+    </li>
+
+</ul>
+
+<hr>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">
+        Logout
+    </button>
+</form>
+
 </body>
 </html>

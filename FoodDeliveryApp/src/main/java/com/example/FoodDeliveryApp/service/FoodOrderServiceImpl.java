@@ -52,6 +52,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         //Create Food Order like bill and status innum save agala athan next we did
         FoodOrder foodOrder = FoodOrder.builder()
                 .user(user)
+                .restaurant(cartItems.get(0).getMenuItem().getRestaurant())
                 .totalAmount(totalAmount)
                 .status(OrderStatus.PENDING)
                 .build();
