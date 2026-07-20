@@ -1,7 +1,9 @@
 package com.example.FoodDeliveryApp.service;
 
+import com.example.FoodDeliveryApp.entity.DeliveryPartner;
 import com.example.FoodDeliveryApp.entity.FoodOrder;
 import com.example.FoodDeliveryApp.enums.OrderStatus;
+import com.example.FoodDeliveryApp.repository.DeliveryPartnerRepository;
 import com.example.FoodDeliveryApp.repository.FoodOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ public class AdminOrderServiceImpl
         implements AdminOrderService {
 
     private final FoodOrderRepository foodOrderRepository;
+    private final DeliveryPartnerRepository deliveryPartnerRepository;
 
     @Override
     public List<FoodOrder> getAllOrders() {
@@ -40,5 +43,27 @@ public class AdminOrderServiceImpl
         foodOrder.setStatus(status);
 
         foodOrderRepository.save(foodOrder);
+    }
+    @Override
+    public void assignDeliveryPartner(
+            Long orderId,
+            Long deliveryPartnerId) {
+
+        // Find Order
+        FoodOrder order = foodOrderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+
+        // Find Delivery Partner
+        DeliveryPartner deliveryPartner =
+                deliveryPartnerRepository.findById(deliveryPartnerId)
+                        .orElseThrow(() ->
+                                new RuntimeException("Delivery Partner not found"));
+
+        // Assign Delivery Partner
+        order.setDeliveryPartner(deliveryPartner);
+
+        // Save Order
+        foodOrderRepository.save(order);
     }
 }

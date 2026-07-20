@@ -67,6 +67,30 @@
 </table>
 
 <hr>
+<h3>Assign Delivery Partner</h3>
+
+<form th:action="@{/admin/orders/assign-delivery}"
+      method="post">
+
+    <input type="hidden"
+           name="orderId"
+           th:value="${order.id}">
+
+    <select name="deliveryPartnerId">
+
+        <option
+                th:each="partner : ${deliveryPartners}"
+                th:value="${partner.id}"
+                th:text="${partner.fullName}">
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Assign
+    </button>
+
+</form>
 
 <h3>Update Status</h3>
 

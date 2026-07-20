@@ -13,4 +13,7 @@ public interface AdminOrderService {
 
     void updateOrderStatus(Long orderId,
                            OrderStatus status);
+    void assignDeliveryPartner(
+            Long orderId,
+            Long deliveryPartnerId);
 }

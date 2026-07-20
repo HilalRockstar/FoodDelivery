@@ -39,4 +39,7 @@ public class FoodOrder {
             cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
+    @ManyToOne
+    @JoinColumn(name = "delivery_partner_id")
+    private DeliveryPartner deliveryPartner;
 }

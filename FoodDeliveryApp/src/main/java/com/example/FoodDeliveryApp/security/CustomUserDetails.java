@@ -1,5 +1,6 @@
 package com.example.FoodDeliveryApp.security;
 
+import com.example.FoodDeliveryApp.entity.DeliveryPartner;
 import com.example.FoodDeliveryApp.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,32 +11,48 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+    private final String email;
+    private final String password;
+    private final String role;
+    private final boolean enabled;
 
+    // Constructor for User
     public CustomUserDetails(User user) {
-        this.user = user;
+
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.role = user.getRole().name();
+        this.enabled = user.isEnabled();
     }
+
+    // Constructor for Delivery Partner
+    public CustomUserDetails(DeliveryPartner deliveryPartner) {
+
+        this.email = deliveryPartner.getEmail();
+        this.password = deliveryPartner.getPassword();
+        this.role = "DELIVERY_PARTNER";
+        this.enabled = deliveryPartner.isEnabled();
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         return List.of(
                 new SimpleGrantedAuthority(
-                        "ROLE_" + user.getRole().name()
+                        "ROLE_" + role
                 )
         );
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return password;
     }
 
     @Override
     public String getUsername() {
-
-        // Login using email
-        return user.getEmail();
+        return email;
     }
 
     @Override
@@ -55,6 +72,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return enabled;
     }
 }

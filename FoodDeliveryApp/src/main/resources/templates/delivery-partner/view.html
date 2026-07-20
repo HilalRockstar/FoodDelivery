@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Delivery Partner Details</title>
+</head>
+
+<body>
+
+<h2>Delivery Partner Details</h2>
+
+<p>
+
+    <b>ID :</b>
+
+    <span th:text="${deliveryPartner.id}"></span>
+
+</p>
+
+<p>
+
+    <b>Name :</b>
+
+    <span th:text="${deliveryPartner.fullName}"></span>
+
+</p>
+
+<p>
+
+    <b>Email :</b>
+
+    <span th:text="${deliveryPartner.email}"></span>
+
+</p>
+
+<p>
+
+    <b>Phone :</b>
+
+    <span th:text="${deliveryPartner.phoneNumber}"></span>
+
+</p>
+
+<p>
+
+    <b>Vehicle :</b>
+
+    <span th:text="${deliveryPartner.vehicleNumber}"></span>
+
+</p>
+
+<p>
+
+    <b>Available :</b>
+
+    <span th:text="${deliveryPartner.available}"></span>
+
+</p>
+
+<p>
+
+    <b>Enabled :</b>
+
+    <span th:text="${deliveryPartner.enabled}"></span>
+
+</p>
+
+<br>
+
+<a th:href="@{/admin/delivery-partners}">
+    ← Back
+</a>
+
+</body>
+</html>

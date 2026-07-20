@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Create Delivery Partner</title>
+</head>
+
+<body>
+
+<h2>Add Delivery Partner</h2>
+
+<form th:action="@{/admin/delivery-partners/create}"
+      th:object="${request}"
+      method="post">
+
+    Full Name
+
+    <input type="text"
+           th:field="*{fullName}">
+
+    <br><br>
+
+    Email
+
+    <input type="email"
+           th:field="*{email}">
+
+    <br><br>
+
+    Password
+
+    <input type="password"
+           th:field="*{password}">
+
+    <br><br>
+
+    Phone Number
+
+    <input type="text"
+           th:field="*{phoneNumber}">
+
+    <br><br>
+
+    Vehicle Number
+
+    <input type="text"
+           th:field="*{vehicleNumber}">
+
+    <br><br>
+
+    <button type="submit">
+
+        Save
+
+    </button>
+
+</form>
+
+<br>
+
+<a th:href="@{/admin/delivery-partners}">
+    ← Back
+</a>
+
+</body>
+</html>
