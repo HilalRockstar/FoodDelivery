@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Details</title>
+</head>
+<body>
+
+<h2>Assigned Order Details</h2>
+
+<hr>
+
+<p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+
+<p><strong>Customer:</strong> <span th:text="${order.user.fullName}"></span></p>
+
+<p><strong>Restaurant:</strong> <span th:text="${order.restaurant.name}"></span></p>
+
+<p><strong>Total Amount:</strong>
+    ₹<span th:text="${order.totalAmount}"></span>
+</p>
+
+<p><strong>Status:</strong>
+    <span th:text="${order.status}"></span>
+</p>
+
+<hr>
+
+<h3>Ordered Items</h3>
+
+<table border="1" cellpadding="8">
+
+    <tr>
+        <th>Food Item</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+
+    <tr th:each="item : ${order.orderItems}">
+        <td th:text="${item.menuItem.name}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.price}"></td>
+    </tr>
+
+</table>
+
+<br>
+<hr>
+
+<h3>Update Delivery Status</h3>
+
+<form th:action="@{/delivery/update-status}" method="post">
+
+    <input type="hidden"
+           name="orderId"
+           th:value="${order.id}"/>
+
+    <select name="status">
+
+        <option value="CONFIRMED">CONFIRMED</option>
+
+        <option value="PREPARING">PREPARING</option>
+
+        <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
+
+        <option value="DELIVERED">DELIVERED</option>
+
+    </select>
+
+    <button type="submit">
+        Update Status
+    </button>
+
+</form>
+
+<br>
+
+<a th:href="@{/delivery/dashboard}">
+    ← Back to Dashboard
+</a>
+
+</body>
+</html>

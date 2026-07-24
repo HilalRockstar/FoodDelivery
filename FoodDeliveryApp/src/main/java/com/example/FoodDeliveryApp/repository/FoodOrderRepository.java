@@ -1,5 +1,6 @@
 package com.example.FoodDeliveryApp.repository;
 
+import com.example.FoodDeliveryApp.entity.DeliveryPartner;
 import com.example.FoodDeliveryApp.entity.FoodOrder;
 import com.example.FoodDeliveryApp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface FoodOrderRepository
 
     // Admin - All Orders
     List<FoodOrder> findAllByOrderByIdDesc();
+
+    List<FoodOrder> findByDeliveryPartnerOrderByIdDesc(
+            DeliveryPartner deliveryPartner);
 }

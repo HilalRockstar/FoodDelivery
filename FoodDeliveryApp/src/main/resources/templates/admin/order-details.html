@@ -128,6 +128,89 @@
 <a th:href="@{/admin/orders}">
     ← Back
 </a>
+<hr>
 
+<h3>Assigned Delivery Partner</h3>
+
+<p
+        th:if="${order.deliveryPartner != null}"
+        th:text="${order.deliveryPartner.fullName}">
+</p>
+
+<p
+        th:if="${order.deliveryPartner == null}">
+    Not Assigned Yet
+</p>
+<hr>
+
+<h3>Delivery Actions</h3>
+
+<div th:if="${order.status.name() == 'READY_FOR_PICKUP'}">
+
+    <form th:action="@{/delivery/update-status}" method="post">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="PICKED_UP"/>
+
+        <button type="submit">
+            Accept & Pick Up
+        </button>
+
+    </form>
+
+</div>
+
+<div th:if="${order.status.name() == 'PICKED_UP'}">
+
+    <form th:action="@{/delivery/update-status}" method="post">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="OUT_FOR_DELIVERY"/>
+
+        <button type="submit">
+            Out For Delivery
+        </button>
+
+    </form>
+
+</div>
+
+<div th:if="${order.status.name() == 'OUT_FOR_DELIVERY'}">
+
+    <form th:action="@{/delivery/update-status}" method="post">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="DELIVERED"/>
+
+        <button type="submit">
+            Mark Delivered
+        </button>
+
+    </form>
+
+</div>
+
+<div th:if="${order.status.name() == 'DELIVERED'}">
+
+    <h3 style="color:green;">
+        ✅ Order Delivered Successfully
+    </h3>
+
+</div>
 </body>
 </html>

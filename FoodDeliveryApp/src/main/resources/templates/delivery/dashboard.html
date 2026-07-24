@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Delivery</title>
+    <title>Delivery Dashboard</title>
 </head>
+
 <body>
-<h1>Delivery Dashboard</h1>
+
+<h2>My Assigned Orders</h2>
+
+<table border="1">
+
+    <tr>
+        <th>Order ID</th>
+        <th>Customer</th>
+        <th>Restaurant</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Action</th>
+    </tr>
+
+    <tr th:each="order : ${orders}">
+
+        <td th:text="${order.id}"></td>
+
+        <td th:text="${order.user.fullName}"></td>
+
+        <td th:text="${order.restaurant.name}"></td>
+
+        <td th:text="${order.status}"></td>
+
+        <td th:text="${order.totalAmount}"></td>
+
+        <td>
+            <a th:href="@{/delivery/order/{id}(id=${order.id})}">
+                View
+            </a>
+        </td>
+
+    </tr>
+
+</table>
+
 </body>
 </html>
