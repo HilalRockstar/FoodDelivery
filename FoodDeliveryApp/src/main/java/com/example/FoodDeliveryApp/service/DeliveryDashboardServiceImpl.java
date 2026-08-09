@@ -38,15 +38,45 @@ public class DeliveryDashboardServiceImpl
                         new RuntimeException("Order not found"));
     }
 
-    @Override
     public void updateOrderStatus(Long orderId,
                                   OrderStatus status) {
 
         FoodOrder order = foodOrderRepository.findById(orderId)
-                .orElseThrow(() ->
-                        new RuntimeException("Order not found"));
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderStatus current = order.getStatus();
+
+        if (current == OrderStatus.CONFIRMED &&
+                status != OrderStatus.PREPARING) {
+
+            throw new RuntimeException("Invalid Status Transition");
+        }
+
+        if (current == OrderStatus.PREPARING &&
+                status != OrderStatus.OUT_FOR_DELIVERY) {
+
+            throw new RuntimeException("Invalid Status Transition");
+        }
+
+        if (current == OrderStatus.OUT_FOR_DELIVERY &&
+                status != OrderStatus.DELIVERED) {
+
+            throw new RuntimeException("Invalid Status Transition");
+        }
 
         order.setStatus(status);
+
+        if (status == OrderStatus.DELIVERED) {
+
+            DeliveryPartner partner = order.getDeliveryPartner();
+
+            if (partner != null) {
+
+                partner.setAvailable(true);
+
+                deliveryPartnerRepository.save(partner);
+            }
+        }
 
         foodOrderRepository.save(order);
     }

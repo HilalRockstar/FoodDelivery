@@ -36,8 +36,7 @@ public class AdminOrderController {
 
         model.addAttribute(
                 "deliveryPartners",
-                deliveryPartnerService.getAllDeliveryPartners());
-
+                deliveryPartnerService.getAvailableDeliveryPartners());
         return "admin/order-details";
     }
 

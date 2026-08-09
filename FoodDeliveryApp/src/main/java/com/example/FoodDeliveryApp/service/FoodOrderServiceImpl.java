@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,6 +54,7 @@ public class FoodOrderServiceImpl implements FoodOrderService {
         FoodOrder foodOrder = FoodOrder.builder()
                 .user(user)
                 .restaurant(cartItems.get(0).getMenuItem().getRestaurant())
+                .orderDate(LocalDateTime.now())
                 .totalAmount(totalAmount)
                 .status(OrderStatus.PENDING)
                 .build();

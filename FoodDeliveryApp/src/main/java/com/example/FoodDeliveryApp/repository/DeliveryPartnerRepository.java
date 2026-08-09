@@ -10,5 +10,6 @@ public interface DeliveryPartnerRepository
         extends JpaRepository<DeliveryPartner, Long> {
 
     Optional<DeliveryPartner> findByEmail(String email);
+
     List<DeliveryPartner> findByAvailableTrue();
 }

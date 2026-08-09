@@ -45,33 +45,79 @@
 
 <br>
 <hr>
-
 <h3>Update Delivery Status</h3>
 
-<form th:action="@{/delivery/update-status}" method="post">
+<!-- CONFIRMED → PREPARING -->
+<div th:if="${order.status.name() == 'CONFIRMED'}">
 
-    <input type="hidden"
-           name="orderId"
-           th:value="${order.id}"/>
+    <form th:action="@{/delivery/update-status}" method="post">
 
-    <select name="status">
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
 
-        <option value="CONFIRMED">CONFIRMED</option>
+        <input type="hidden"
+               name="status"
+               value="PREPARING"/>
 
-        <option value="PREPARING">PREPARING</option>
+        <button type="submit">
+            🍳 Start Preparing
+        </button>
 
-        <option value="OUT_FOR_DELIVERY">OUT_FOR_DELIVERY</option>
+    </form>
 
-        <option value="DELIVERED">DELIVERED</option>
+</div>
 
-    </select>
+<!-- PREPARING → OUT FOR DELIVERY -->
+<div th:if="${order.status.name() == 'PREPARING'}">
 
-    <button type="submit">
-        Update Status
-    </button>
+    <form th:action="@{/delivery/update-status}" method="post">
 
-</form>
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
 
+        <input type="hidden"
+               name="status"
+               value="OUT_FOR_DELIVERY"/>
+
+        <button type="submit">
+            🚴 Picked Up
+        </button>
+
+    </form>
+
+</div>
+
+<!-- OUT FOR DELIVERY → DELIVERED -->
+<div th:if="${order.status.name() == 'OUT_FOR_DELIVERY'}">
+
+    <form th:action="@{/delivery/update-status}" method="post">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="DELIVERED"/>
+
+        <button type="submit">
+            ✅ Mark Delivered
+        </button>
+
+    </form>
+
+</div>
+
+<!-- DELIVERED -->
+<div th:if="${order.status.name() == 'DELIVERED'}">
+
+    <h3 style="color:green;">
+        🎉 Order Delivered Successfully
+    </h3>
+
+</div>
 <br>
 
 <a th:href="@{/delivery/dashboard}">

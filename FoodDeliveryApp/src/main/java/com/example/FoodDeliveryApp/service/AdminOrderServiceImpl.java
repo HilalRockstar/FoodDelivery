@@ -49,21 +49,30 @@ public class AdminOrderServiceImpl
             Long orderId,
             Long deliveryPartnerId) {
 
-        // Find Order
         FoodOrder order = foodOrderRepository.findById(orderId)
                 .orElseThrow(() ->
                         new RuntimeException("Order not found"));
 
-        // Find Delivery Partner
         DeliveryPartner deliveryPartner =
                 deliveryPartnerRepository.findById(deliveryPartnerId)
                         .orElseThrow(() ->
                                 new RuntimeException("Delivery Partner not found"));
 
-        // Assign Delivery Partner
+        // Prevent assigning busy partner
+        if (!deliveryPartner.isAvailable()) {
+
+            throw new RuntimeException(
+                    "Delivery Partner is already assigned.");
+        }
+
         order.setDeliveryPartner(deliveryPartner);
 
-        // Save Order
+        order.setStatus(OrderStatus.CONFIRMED);
+
+        deliveryPartner.setAvailable(false);
+
+        deliveryPartnerRepository.save(deliveryPartner);
+
         foodOrderRepository.save(order);
     }
 }

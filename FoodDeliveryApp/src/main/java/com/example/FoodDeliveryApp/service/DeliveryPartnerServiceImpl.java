@@ -79,4 +79,12 @@ public class DeliveryPartnerServiceImpl
                 .enabled(deliveryPartner.isEnabled())
                 .build();
     }
+    @Override
+    public List<DeliveryPartnerResponse> getAvailableDeliveryPartners() {
+
+        return deliveryPartnerRepository.findByAvailableTrue()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
 }

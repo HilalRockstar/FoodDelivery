@@ -12,8 +12,9 @@ public interface DeliveryPartnerService {
 
     List<DeliveryPartnerResponse> getAllDeliveryPartners();
 
-    DeliveryPartnerResponse getDeliveryPartnerById(
-            Long id);
+    List<DeliveryPartnerResponse> getAvailableDeliveryPartners();
+
+    DeliveryPartnerResponse getDeliveryPartnerById(Long id);
 
     void deleteDeliveryPartner(Long id);
 }
