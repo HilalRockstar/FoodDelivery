@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MenuItemController {
 
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
+
     private final MenuItemService menuItemService;
 
     // Show Menu Items of a Restaurant
@@ -19,16 +23,7 @@ public class MenuItemController {
     public String getMenuItemsByRestaurant(
             @PathVariable Long restaurantId,
             Model model) {
-
-        model.addAttribute(
-                "menuItems",
-                menuItemService.getMenuItemsByRestaurant(restaurantId));
-
-        model.addAttribute(
-                "restaurantId",
-                restaurantId);
-
-        return "menu/list";
+        return "redirect:" + FRONTEND_URL + "/admin/menu/" + restaurantId;
     }
 
     // Open Create Menu Page
@@ -36,13 +31,7 @@ public class MenuItemController {
     public String createMenuPage(
             @PathVariable Long restaurantId,
             Model model) {
-
-        MenuItemRequest request = new MenuItemRequest();
-        request.setRestaurantId(restaurantId);
-
-        model.addAttribute("request", request);
-
-        return "menu/create";
+        return "redirect:" + FRONTEND_URL + "/admin/menu/create/" + restaurantId;
     }
 
     // Save Menu Item

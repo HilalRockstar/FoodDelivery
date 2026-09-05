@@ -1,4 +1,5 @@
 package com.example.FoodDeliveryApp.config;
+
 import com.example.FoodDeliveryApp.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,78 +10,90 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import com.example.FoodDeliveryApp.security.CustomLoginSuccessHandler;
+
 @Configuration
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
-    private final CustomLoginSuccessHandler successHandler;
-    public SecurityConfig(
-            CustomUserDetailsService customUserDetailsService,
-            CustomLoginSuccessHandler successHandler) {
+        private final CustomUserDetailsService customUserDetailsService;
+        private final CustomLoginSuccessHandler successHandler;
 
-        this.customUserDetailsService = customUserDetailsService;
-        this.successHandler = successHandler;
-    }
+        public SecurityConfig(
+                        CustomUserDetailsService customUserDetailsService,
+                        CustomLoginSuccessHandler successHandler) {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+                this.customUserDetailsService = customUserDetailsService;
+                this.successHandler = successHandler;
+        }
 
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration)
-            throws Exception {
+                return new BCryptPasswordEncoder();
+        }
 
-        return configuration.getAuthenticationManager();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration configuration)
+                        throws Exception {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http)
-            throws Exception {
+                return configuration.getAuthenticationManager();
+        }
 
-        http
-                .authorizeHttpRequests(auth -> auth
+        @Bean
+        public SecurityFilterChain securityFilterChain(
+                        HttpSecurity http)
+                        throws Exception {
 
-                        .requestMatchers(
-                                "/register",
-                                "/login",
-                                "/css/**",
-                                "/js/**"
-                        ).permitAll()
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .authorizeHttpRequests(auth -> auth
 
-                        .requestMatchers(
-                                "/admin/**"
-                        ).hasRole("ADMIN")
+                                                .requestMatchers(
+                                                                "/register",
+                                                                "/login",
+                                                                "/css/**",
+                                                                "/js/**")
+                                                .permitAll()
 
-                        .requestMatchers(
-                                "/user/**"
-                        ).hasRole("USER")
+                                                .requestMatchers(
+                                                                "/admin/**")
+                                                .hasRole("ADMIN")
 
-                        .requestMatchers(
-                                "/delivery/**"
-                        ).hasRole("DELIVERY_PARTNER")
+                                                .requestMatchers(
+                                                                "/user/**")
+                                                .hasRole("USER")
 
-                        .anyRequest()
-                        .authenticated()
-                )
+                                                .requestMatchers(
+                                                                "/delivery/**")
+                                                .hasRole("DELIVERY_PARTNER")
 
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .successHandler(successHandler)
-                        .permitAll()
-                )
+                                                .requestMatchers(
+                                                                "/api/admin/**")
+                                                .hasRole("ADMIN")
 
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll()
-                );
+                                                .requestMatchers(
+                                                                "/api/delivery/**")
+                                                .hasRole("DELIVERY_PARTNER")
 
-        return http.build();
-    }
+                                                .requestMatchers(
+                                                                "/api/**")
+                                                .authenticated()
+
+                                                .anyRequest()
+                                                .authenticated())
+
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .successHandler(successHandler)
+                                                .permitAll())
+
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/login?logout")
+                                                .invalidateHttpSession(true)
+                                                .deleteCookies("JSESSIONID")
+                                                .permitAll());
+
+                return http.build();
+        }
 }

@@ -11,6 +11,16 @@ import MyOrders from './pages/MyOrders'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import RoleDashboard from './pages/RoleDashboard'
+import AdminRestaurants from './pages/AdminRestaurants'
+import AdminDeliveryPartners from './pages/AdminDeliveryPartners'
+import AdminOrders from './pages/AdminOrders'
+import AdminMenu from './pages/AdminMenu'
+import OrderDetails from './pages/OrderDetails'
+import DeliveryDashboard from './pages/DeliveryDashboard'
+import DeliveryOrderDetails from './pages/DeliveryOrderDetails'
+import AdminRestaurantForm from './pages/AdminRestaurantForm'
+import AdminMenuForm from './pages/AdminMenuForm'
+import AdminPartnerForm from './pages/AdminPartnerForm'
 
 function App() {
 
@@ -41,10 +51,20 @@ function App() {
                     />
 
                     <Route path="/orders" element={<MyOrders />} />
+                    <Route path="/orders/:id" element={<OrderDetails />} />
 
                     <Route path="/user/dashboard" element={<RoleDashboard role="customer" />} />
                     <Route path="/admin/dashboard" element={<RoleDashboard role="admin" />} />
+                    <Route path="/admin/restaurants" element={<AdminRestaurants />} />
+                    <Route path="/admin/restaurants/create" element={<AdminRestaurantForm />} />
+                    <Route path="/admin/delivery-partners" element={<AdminDeliveryPartners />} />
+                    <Route path="/admin/orders" element={<AdminOrders />} />
+                    <Route path="/admin/menu/:restaurantId" element={<AdminMenu />} />
+                    <Route path="/admin/menu/create/:restaurantId" element={<AdminMenuForm />} />
+                    <Route path="/admin/delivery-partners/create" element={<AdminPartnerForm />} />
                     <Route path="/delivery/dashboard" element={<RoleDashboard role="delivery" />} />
+                    <Route path="/delivery/orders" element={<DeliveryDashboard />} />
+                    <Route path="/delivery/order/:id" element={<DeliveryOrderDetails />} />
 
                 </Routes>
 

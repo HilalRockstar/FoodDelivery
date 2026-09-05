@@ -12,28 +12,22 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DeliveryPartnerController {
 
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
+
     private final DeliveryPartnerService deliveryPartnerService;
 
     // View All Delivery Partners
     @GetMapping
     public String getAllDeliveryPartners(Model model) {
-
-        model.addAttribute(
-                "deliveryPartners",
-                deliveryPartnerService.getAllDeliveryPartners());
-
-        return "delivery-partner/list";
+        return "redirect:" + FRONTEND_URL + "/admin/delivery-partners";
     }
 
     // Open Create Page
     @GetMapping("/create")
     public String createDeliveryPartnerPage(Model model) {
-
-        model.addAttribute(
-                "request",
-                new DeliveryPartnerRequest());
-
-        return "delivery-partner/create";
+        return "redirect:" + FRONTEND_URL + "/admin/delivery-partners/create";
     }
 
     // Save Delivery Partner

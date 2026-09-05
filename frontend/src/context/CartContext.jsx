@@ -15,8 +15,8 @@ export function CartProvider({ children }) {
     async function addToCart(item) {
         setLoading(true)
         try {
-            const nextCart = await cartApi.add(item.id)
-            setCart(nextCart)
+            await cartApi.add(item.id)
+            setCart(await cartApi.get())
         } finally {
             setLoading(false)
         }
@@ -25,10 +25,12 @@ export function CartProvider({ children }) {
     async function changeQuantity(item, direction) {
         setLoading(true)
         try {
-            const nextCart = direction === 'increase'
-                ? await cartApi.increase(item.id ?? item.cartItemId)
-                : await cartApi.decrease(item.id ?? item.cartItemId)
-            setCart(nextCart)
+            if (direction === 'increase') {
+                await cartApi.increase(item.id ?? item.cartItemId)
+            } else {
+                await cartApi.decrease(item.id ?? item.cartItemId)
+            }
+            setCart(await cartApi.get())
         } finally {
             setLoading(false)
         }
@@ -37,7 +39,8 @@ export function CartProvider({ children }) {
     async function removeFromCart(item) {
         setLoading(true)
         try {
-            setCart(await cartApi.remove(item.id ?? item.cartItemId))
+            await cartApi.remove(item.id ?? item.cartItemId)
+            setCart(await cartApi.get())
         } finally {
             setLoading(false)
         }

@@ -15,16 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
+
     private final UserService userService;
 
     @GetMapping("/register")
     public String registerPage(RegisterRequest request) {
 
-        return "register";
+        return "redirect:" + FRONTEND_URL + "/register";
     }
+
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "redirect:" + FRONTEND_URL + "/login";
     }
 
     @PostMapping("/register")
@@ -32,12 +37,12 @@ public class AuthController {
             @Valid RegisterRequest request,
             BindingResult result) {
 
-        if(result.hasErrors()) {
-            return "register";
+        if (result.hasErrors()) {
+            return "redirect:" + FRONTEND_URL + "/register?error=validation";
         }
 
         userService.registerUser(request);
 
-        return "redirect:/login";
+        return "redirect:" + FRONTEND_URL + "/login?registered";
     }
 }

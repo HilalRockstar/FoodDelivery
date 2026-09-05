@@ -13,42 +13,35 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/delivery")
 public class DeliveryDashboardController {
 
-    private final DeliveryDashboardService deliveryDashboardService;
+        private static final String FRONTEND_URL = System.getenv().getOrDefault(
+                        "FRONTEND_URL",
+                        "http://localhost:5173");
 
-    @GetMapping("/dashboard")
-    public String dashboard(
-            Authentication authentication,
-            Model model) {
+        private final DeliveryDashboardService deliveryDashboardService;
 
-        String email = authentication.getName();
+        @GetMapping("/dashboard")
+        public String dashboard(
+                        Authentication authentication,
+                        Model model) {
+                return "redirect:" + FRONTEND_URL + "/delivery/orders";
+        }
 
-        model.addAttribute(
-                "orders",
-                deliveryDashboardService.getAssignedOrders(email));
+        @GetMapping("/order/{orderId}")
+        public String viewAssignedOrder(
+                        @PathVariable Long orderId,
+                        Model model) {
+                return "redirect:" + FRONTEND_URL + "/delivery/order/" + orderId;
+        }
 
-        return "delivery/dashboard";
-    }
+        @PostMapping("/update-status")
+        public String updateStatus(
+                        @RequestParam Long orderId,
+                        @RequestParam OrderStatus status) {
 
-    @GetMapping("/order/{orderId}")
-    public String viewAssignedOrder(
-            @PathVariable Long orderId,
-            Model model) {
+                deliveryDashboardService.updateOrderStatus(
+                                orderId,
+                                status);
 
-        model.addAttribute(
-                "order",
-                deliveryDashboardService.getOrderById(orderId));
-
-        return "delivery/order-details";
-    }
-    @PostMapping("/update-status")
-    public String updateStatus(
-            @RequestParam Long orderId,
-            @RequestParam OrderStatus status) {
-
-        deliveryDashboardService.updateOrderStatus(
-                orderId,
-                status);
-
-        return "redirect:/delivery/order/" + orderId;
-    }
+                return "redirect:" + FRONTEND_URL + "/delivery/order/" + orderId;
+        }
 }

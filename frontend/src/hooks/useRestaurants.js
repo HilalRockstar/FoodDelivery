@@ -6,7 +6,7 @@ export function useRestaurants() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        restaurantApi.list().then(setRestaurants).finally(() => setLoading(false))
+        restaurantApi.list().then(setRestaurants).catch(() => setRestaurants([])).finally(() => setLoading(false))
     }, [])
 
     return { restaurants, loading }
@@ -18,7 +18,7 @@ export function useRestaurantMenu(id) {
 
     useEffect(() => {
         setLoading(true)
-        restaurantApi.menu(id).then(setMenuItems).finally(() => setLoading(false))
+        restaurantApi.menu(id).then(setMenuItems).catch(() => setMenuItems([])).finally(() => setLoading(false))
     }, [id])
 
     return { menuItems, loading }

@@ -16,24 +16,21 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class RestaurantController {
 
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
+
     private final RestaurantService restaurantService;
 
     @GetMapping
     public String getAllRestaurants(Model model) {
-
-        model.addAttribute(
-                "restaurants",
-                restaurantService.getAllRestaurants()
-        );
-
-        return "restaurant/list";
+        return "redirect:" + FRONTEND_URL + "/admin/restaurants";
     }
 
     @GetMapping("/create")
     public String createRestaurantPage(
             RestaurantRequest request) {
-
-        return "restaurant/create";
+        return "redirect:" + FRONTEND_URL + "/admin/restaurants/create";
     }
 
     @PostMapping("/create")
@@ -57,8 +54,7 @@ public class RestaurantController {
 
         model.addAttribute(
                 "restaurant",
-                restaurantService.getRestaurantById(id)
-        );
+                restaurantService.getRestaurantById(id));
 
         return "restaurant/view";
     }

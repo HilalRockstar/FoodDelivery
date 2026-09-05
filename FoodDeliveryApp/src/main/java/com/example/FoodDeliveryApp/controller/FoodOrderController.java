@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 import java.util.List;
+
 @Controller
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class FoodOrderController {
+
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
 
     private final FoodOrderService foodOrderService;
 
@@ -30,29 +34,14 @@ public class FoodOrderController {
 
     @GetMapping
     public String myOrders(Authentication authentication,
-                           Model model) {
-
-        String email = authentication.getName();
-
-        model.addAttribute(
-                "orders",
-                foodOrderService.getMyOrders(email));
-
-        return "user/orders";
+            Model model) {
+        return "redirect:" + FRONTEND_URL + "/orders";
     }
+
     @GetMapping("/{id}")
     public String orderDetails(
             @PathVariable Long id,
             Model model) {
-
-        model.addAttribute(
-                "order",
-                foodOrderService.getOrderById(id));
-
-        model.addAttribute(
-                "orderItems",
-                foodOrderService.getOrderItems(id));
-
-        return "user/order-details";
+        return "redirect:" + FRONTEND_URL + "/orders/" + id;
     }
 }

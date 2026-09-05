@@ -14,6 +14,10 @@ import java.io.IOException;
 public class CustomLoginSuccessHandler
         implements AuthenticationSuccessHandler {
 
+    private static final String FRONTEND_URL = System.getenv().getOrDefault(
+            "FRONTEND_URL",
+            "http://localhost:5173");
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
@@ -26,21 +30,21 @@ public class CustomLoginSuccessHandler
             String role = authority.getAuthority();
 
             if (role.equals("ROLE_ADMIN")) {
-                response.sendRedirect("/admin/dashboard");
+                response.sendRedirect(FRONTEND_URL + "/admin/dashboard");
                 return;
             }
 
             if (role.equals("ROLE_USER")) {
-                response.sendRedirect("/user/dashboard");
+                response.sendRedirect(FRONTEND_URL + "/user/dashboard");
                 return;
             }
 
             if (role.equals("ROLE_DELIVERY_PARTNER")) {
-                response.sendRedirect("/delivery/dashboard");
+                response.sendRedirect(FRONTEND_URL + "/delivery/dashboard");
                 return;
             }
         }
 
-        response.sendRedirect("/login");
+        response.sendRedirect(FRONTEND_URL + "/login?error");
     }
 }

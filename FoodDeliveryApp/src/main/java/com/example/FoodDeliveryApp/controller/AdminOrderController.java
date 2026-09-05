@@ -13,53 +13,54 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminOrderController {
 
-    private final AdminOrderService adminOrderService;
-    private final DeliveryPartnerService deliveryPartnerService;
-    @GetMapping
-    public String getAllOrders(Model model) {
+        private static final String FRONTEND_URL = System.getenv().getOrDefault(
+                        "FRONTEND_URL",
+                        "http://localhost:5173");
 
-        model.addAttribute(
-                "orders",
-                adminOrderService.getAllOrders());
+        private final AdminOrderService adminOrderService;
+        private final DeliveryPartnerService deliveryPartnerService;
 
-        return "admin/orders";
-    }
+        @GetMapping
+        public String getAllOrders(Model model) {
+                return "redirect:" + FRONTEND_URL + "/admin/orders";
+        }
 
-    @GetMapping("/{orderId}")
-    public String getOrderDetails(
-            @PathVariable Long orderId,
-            Model model) {
+        @GetMapping("/{orderId}")
+        public String getOrderDetails(
+                        @PathVariable Long orderId,
+                        Model model) {
 
-        model.addAttribute(
-                "order",
-                adminOrderService.getOrderById(orderId));
+                model.addAttribute(
+                                "order",
+                                adminOrderService.getOrderById(orderId));
 
-        model.addAttribute(
-                "deliveryPartners",
-                deliveryPartnerService.getAvailableDeliveryPartners());
-        return "admin/order-details";
-    }
+                model.addAttribute(
+                                "deliveryPartners",
+                                deliveryPartnerService.getAvailableDeliveryPartners());
+                return "admin/order-details";
+        }
 
-    @PostMapping("/update-status")
-    public String updateStatus(
-            @RequestParam Long orderId,
-            @RequestParam OrderStatus status) {
+        @PostMapping("/update-status")
+        public String updateStatus(
+                        @RequestParam Long orderId,
+                        @RequestParam OrderStatus status) {
 
-        adminOrderService.updateOrderStatus(
-                orderId,
-                status);
+                adminOrderService.updateOrderStatus(
+                                orderId,
+                                status);
 
-        return "redirect:/admin/orders";
-    }
-    @PostMapping("/assign-delivery")
-    public String assignDeliveryPartner(
-            @RequestParam Long orderId,
-            @RequestParam Long deliveryPartnerId) {
+                return "redirect:/admin/orders";
+        }
 
-        adminOrderService.assignDeliveryPartner(
-                orderId,
-                deliveryPartnerId);
+        @PostMapping("/assign-delivery")
+        public String assignDeliveryPartner(
+                        @RequestParam Long orderId,
+                        @RequestParam Long deliveryPartnerId) {
 
-        return "redirect:/admin/orders/" + orderId;
-    }
+                adminOrderService.assignDeliveryPartner(
+                                orderId,
+                                deliveryPartnerId);
+
+                return "redirect:/admin/orders/" + orderId;
+        }
 }
