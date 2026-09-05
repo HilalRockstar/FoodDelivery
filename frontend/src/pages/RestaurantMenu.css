@@ -1,0 +1,16 @@
+.menu-page { max-width: 1180px; }
+.back-link { display: inline-block; margin-bottom: 55px; }
+.menu-header { align-items: end; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; padding-bottom: 42px; }
+.menu-header h1 { margin-bottom: 17px; }
+.menu-header .status-dot { color: var(--green); font-size: .85rem; font-weight: 700; }
+.menu-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); padding-top: 30px; }
+.menu-item-card { background: var(--white); border: 1px solid var(--line); display: flex; min-height: 180px; overflow: hidden; }
+.menu-item-art { align-items: center; background: #f5c7a0; color: var(--green); display: flex; flex: 0 0 135px; font-family: 'Space Grotesk'; font-size: 2.4rem; font-weight: 700; justify-content: center; letter-spacing: -.1em; }
+.menu-item-content { display: flex; flex: 1; flex-direction: column; padding: 21px; }
+.menu-item-top { align-items: start; display: flex; gap: 12px; justify-content: space-between; }
+.menu-item-top h3 { font-size: 1.15rem; }
+.menu-item-top strong { color: var(--green); white-space: nowrap; }
+.menu-item-content p { color: var(--muted); font-size: .86rem; line-height: 1.5; margin: 11px 0 18px; }
+.menu-item-content .button { align-self: start; margin-top: auto; }
+@media (max-width: 760px) { .menu-header { align-items: start; flex-direction: column; gap: 22px; } .menu-grid { grid-template-columns: 1fr; } }
+@media (max-width: 450px) { .menu-item-art { flex-basis: 90px; font-size: 1.8rem; } }
