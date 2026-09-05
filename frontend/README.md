@@ -1,16 +1,79 @@
-# React + Vite
+# Foodie Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Foodie is the React customer interface for the FoodDelivery Spring Boot application. It provides restaurant browsing, menu discovery, cart management, order history, authentication screens, and role-specific dashboard entry points.
 
-Currently, two official plugins are available:
+## Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 18+
+- npm
+- The Spring Boot backend running on `http://localhost:8080` for authentication and server-side role pages
 
-## React Compiler
+## Run Locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Open [http://localhost:5173](http://localhost:5173).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Useful commands:
+
+```bash
+npm run build
+npm run lint
+npm run preview
+```
+
+## Routes
+
+### Public and customer routes
+
+- `/` - Foodie home page
+- `/restaurants` - Restaurant directory
+- `/restaurants/:id` - Restaurant menu
+- `/cart` - Current cart and checkout action
+- `/orders` - Customer order history
+- `/login` - Spring Security login form
+- `/register` - Customer registration form
+
+### Role entry routes
+
+- `/user/dashboard` - Customer dashboard entry
+- `/admin/dashboard` - Admin dashboard entry
+- `/delivery/dashboard` - Delivery partner dashboard entry
+
+The backend remains the source of truth for authorization. After login, Spring Security redirects users based on their role:
+
+- `ROLE_USER` -> `/user/dashboard`
+- `ROLE_ADMIN` -> `/admin/dashboard`
+- `ROLE_DELIVERY_PARTNER` -> `/delivery/dashboard`
+
+## Backend Integration
+
+Authentication forms submit directly to the Spring Boot server:
+
+- `POST /login`
+- `POST /register`
+- `POST /logout`
+
+The API adapter in `src/services/api.js` follows the existing backend paths for restaurants, menus, carts, and orders. The current backend controllers return Thymeleaf HTML rather than JSON, so the frontend uses local fallback data when an endpoint does not return JSON. This keeps the React UI usable while preserving the existing backend implementation.
+
+To use a different backend host, set:
+
+```bash
+VITE_BACKEND_URL=http://localhost:8080
+```
+
+## Project Structure
+
+```text
+src/
+  components/   Shared navigation, restaurant, and menu components
+  context/      Cart state provider
+  hooks/        Cart and restaurant data hooks
+  pages/        Customer, auth, and role dashboard screens
+  services/     Backend request adapters and fallback data
+```
+
+The UI is responsive and designed for desktop and mobile widths. Backend Java and Thymeleaf files are kept outside this frontend project.
