@@ -13,6 +13,7 @@ function Navbar() {
 
                 <NavLink to="/" end>Home</NavLink><NavLink to="/restaurants">Restaurants</NavLink><NavLink to="/orders">My orders</NavLink>
                 <NavLink className="cart-link" to="/cart">Cart <span>{useCart().cart.length}</span></NavLink>
+                <NavLink className="login-link" to="/login">Sign in</NavLink>
 
             </div>
 
