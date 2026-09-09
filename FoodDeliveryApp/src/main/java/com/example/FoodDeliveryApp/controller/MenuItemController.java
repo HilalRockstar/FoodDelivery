@@ -3,6 +3,7 @@ package com.example.FoodDeliveryApp.controller;
 import com.example.FoodDeliveryApp.dto.MenuItemRequest;
 import com.example.FoodDeliveryApp.service.MenuItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +37,12 @@ public class MenuItemController {
 
     // Save Menu Item
     @PostMapping("/create")
-    public String createMenuItem(
+    public ResponseEntity<Void> createMenuItem(
             @ModelAttribute MenuItemRequest request) {
 
         menuItemService.createMenuItem(request);
 
-        return "redirect:/admin/menu/" + request.getRestaurantId();
+        return ResponseEntity.ok().build();
     }
 
     // Delete Menu Item

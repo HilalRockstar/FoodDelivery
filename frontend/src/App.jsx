@@ -14,6 +14,7 @@ import RoleDashboard from './pages/RoleDashboard'
 import AdminRestaurants from './pages/AdminRestaurants'
 import AdminDeliveryPartners from './pages/AdminDeliveryPartners'
 import AdminOrders from './pages/AdminOrders'
+import AdminOrderDetails from './pages/AdminOrderDetails'
 import AdminMenu from './pages/AdminMenu'
 import OrderDetails from './pages/OrderDetails'
 import DeliveryDashboard from './pages/DeliveryDashboard'
@@ -146,6 +147,14 @@ function App() {
                         element={
                             <ProtectedRoute allowedRoles={['ADMIN']}>
                                 <AdminOrders />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/orders/:id"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminOrderDetails />
                             </ProtectedRoute>
                         }
                     />

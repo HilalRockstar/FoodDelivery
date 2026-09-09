@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { useRestaurantMenu } from '../hooks/useRestaurants'
 import { useCart } from '../hooks/useCart'
 import MenuItemCard from '../components/MenuItemCard'
+import './RestaurantMenu.css'
 
 function RestaurantMenu() {
 

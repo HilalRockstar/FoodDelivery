@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { orderApi } from '../services/api'
+import './Cart.css'
 
 function MyOrders() {
     const [orders, setOrders] = useState([])

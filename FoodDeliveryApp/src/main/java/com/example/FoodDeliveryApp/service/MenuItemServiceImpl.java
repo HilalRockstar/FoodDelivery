@@ -38,7 +38,7 @@ public class MenuItemServiceImpl
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
-                .available(true)
+                .available(request.isAvailable())
                 .restaurant(restaurant)
                 .build();
 

@@ -3,6 +3,7 @@ package com.example.FoodDeliveryApp.controller;
 import com.example.FoodDeliveryApp.dto.DeliveryPartnerRequest;
 import com.example.FoodDeliveryApp.service.DeliveryPartnerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +33,12 @@ public class DeliveryPartnerController {
 
     // Save Delivery Partner
     @PostMapping("/create")
-    public String createDeliveryPartner(
+    public ResponseEntity<Void> createDeliveryPartner(
             @ModelAttribute DeliveryPartnerRequest request) {
 
         deliveryPartnerService.createDeliveryPartner(request);
 
-        return "redirect:/admin/delivery-partners";
+        return ResponseEntity.ok().build();
     }
 
     // View One Delivery Partner

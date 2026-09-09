@@ -6,6 +6,7 @@ import com.example.FoodDeliveryApp.service.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,17 +35,17 @@ public class RestaurantController {
     }
 
     @PostMapping("/create")
-    public String createRestaurant(
+    public ResponseEntity<Void> createRestaurant(
             @Valid RestaurantRequest request,
             BindingResult result) {
 
         if (result.hasErrors()) {
-            return "restaurant/create";
+            return ResponseEntity.badRequest().build();
         }
 
         restaurantService.createRestaurant(request);
 
-        return "redirect:/admin/restaurants";
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")

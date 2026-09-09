@@ -67,16 +67,16 @@ export const restaurantApi = {
 
 export const cartApi = {
     get: () => request('/api/cart'),
-    add: (id) => command(`/user/cart/add/${id}`),
-    increase: (id) => command(`/user/cart/increase/${id}`),
-    decrease: (id) => command(`/user/cart/decrease/${id}`),
-    remove: (id) => command(`/user/cart/remove/${id}`),
-    clear: () => command('/user/cart/clear'),
+    add: (id) => command(`/api/cart/add/${id}`, { method: 'POST' }),
+    increase: (id) => command(`/api/cart/increase/${id}`, { method: 'POST' }),
+    decrease: (id) => command(`/api/cart/decrease/${id}`, { method: 'POST' }),
+    remove: (id) => command(`/api/cart/remove/${id}`, { method: 'POST' }),
+    clear: () => command('/api/cart/clear', { method: 'POST' }),
 }
 
 export const orderApi = {
     list: () => request('/api/orders'),
-    place: () => command('/orders/place', { method: 'POST' }),
+    place: () => command('/api/orders/place', { method: 'POST' }),
 }
 
 export const adminApi = {
@@ -84,11 +84,26 @@ export const adminApi = {
     menu: (id) => request(`/api/admin/restaurants/${id}/menu`),
     deliveryPartners: () => request('/api/admin/delivery-partners'),
     orders: () => request('/api/admin/orders'),
+    assignDelivery: (orderId, deliveryPartnerId) => command(`/api/admin/orders/${orderId}/assign-delivery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deliveryPartnerId }),
+    }),
+    updateStatus: (orderId, status) => command(`/api/admin/orders/${orderId}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+    }),
 }
 
 export const deliveryApi = {
     orders: () => request('/api/delivery/orders'),
     order: (id) => request(`/api/delivery/orders/${id}`),
+    updateStatus: (orderId, status) => command(`/api/delivery/orders/${orderId}/status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+    }),
 }
 
 export const orderDetailsApi = { get: (id) => request(`/api/orders/${id}`) }

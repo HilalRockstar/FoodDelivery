@@ -3,6 +3,7 @@ package com.example.FoodDeliveryApp.controller;
 import com.example.FoodDeliveryApp.entity.CartItem;
 import com.example.FoodDeliveryApp.entity.FoodOrder;
 import com.example.FoodDeliveryApp.entity.OrderItem;
+import com.example.FoodDeliveryApp.enums.OrderStatus;
 import com.example.FoodDeliveryApp.service.AdminOrderService;
 import com.example.FoodDeliveryApp.service.CartService;
 import com.example.FoodDeliveryApp.service.DeliveryDashboardService;
@@ -11,6 +12,8 @@ import com.example.FoodDeliveryApp.service.FoodOrderService;
 import com.example.FoodDeliveryApp.service.MenuItemService;
 import com.example.FoodDeliveryApp.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -92,6 +95,78 @@ public class ApiController {
         return order(deliveryDashboardService.getOrderById(id));
     }
 
+    @PostMapping("/cart/add/{menuItemId}")
+    public ResponseEntity<Void> addToCart(
+            @PathVariable Long menuItemId,
+            Authentication authentication) {
+
+        boolean added = cartService.addToCart(menuItemId, authentication.getName());
+
+        if (!added) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cart/increase/{cartItemId}")
+    public ResponseEntity<Void> increaseCartItem(@PathVariable Long cartItemId) {
+        cartService.increaseQuantity(cartItemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cart/decrease/{cartItemId}")
+    public ResponseEntity<Void> decreaseCartItem(@PathVariable Long cartItemId) {
+        cartService.decreaseQuantity(cartItemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cart/remove/{cartItemId}")
+    public ResponseEntity<Void> removeCartItem(@PathVariable Long cartItemId) {
+        cartService.removeFromCart(cartItemId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/cart/clear")
+    public ResponseEntity<Void> clearCart(Authentication authentication) {
+        cartService.clearCart(authentication.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/orders/place")
+    public ResponseEntity<Void> placeOrder(Authentication authentication) {
+        foodOrderService.placeOrder(authentication.getName());
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/admin/orders/{orderId}/assign-delivery")
+    public ResponseEntity<Void> assignDeliveryPartner(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, Long> payload) {
+
+        Long deliveryPartnerId = payload.get("deliveryPartnerId");
+        adminOrderService.assignDeliveryPartner(orderId, deliveryPartnerId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/admin/orders/{orderId}/status")
+    public ResponseEntity<Void> updateAdminOrderStatus(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, String> payload) {
+
+        adminOrderService.updateOrderStatus(orderId, OrderStatus.valueOf(payload.get("status")));
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/delivery/orders/{orderId}/status")
+    public ResponseEntity<Void> updateDeliveryOrderStatus(
+            @PathVariable Long orderId,
+            @RequestBody Map<String, String> payload) {
+
+        deliveryDashboardService.updateOrderStatus(orderId, OrderStatus.valueOf(payload.get("status")));
+        return ResponseEntity.ok().build();
+    }
+
     private Map<String, Object> cartItem(CartItem item) {
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("cartItemId", item.getId());
@@ -114,6 +189,12 @@ public class ApiController {
         }
         if (foodOrder.getUser() != null) {
             result.put("user", Map.of("fullName", foodOrder.getUser().getFullName()));
+        }
+        if (foodOrder.getDeliveryPartner() != null) {
+            result.put("deliveryPartner", Map.of(
+                    "id", foodOrder.getDeliveryPartner().getId(),
+                    "fullName", foodOrder.getDeliveryPartner().getFullName(),
+                    "available", foodOrder.getDeliveryPartner().isAvailable()));
         }
         List<OrderItem> items = foodOrder.getOrderItems();
         if (items != null) {

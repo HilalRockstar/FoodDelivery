@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart } from '../hooks/useCart'
 import { orderApi } from '../services/api'
+import './Cart.css'
 
 function Cart() {
     const { cart, changeQuantity, removeFromCart, clearCart, loading } = useCart()
