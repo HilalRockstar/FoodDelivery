@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 
 import { CartProvider } from './context/CartContext'
 
@@ -22,6 +22,22 @@ import AdminRestaurantForm from './pages/AdminRestaurantForm'
 import AdminMenuForm from './pages/AdminMenuForm'
 import AdminPartnerForm from './pages/AdminPartnerForm'
 
+function ProtectedRoute({ children, allowedRoles }) {
+    const location = useLocation()
+    const token = localStorage.getItem('jwtToken')
+    const userRole = localStorage.getItem('userRole')
+
+    if (!token) {
+        return <Navigate to="/login?error=auth" replace state={{ from: location.pathname }} />
+    }
+
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+        return <Navigate to="/login?error=forbidden" replace state={{ from: location.pathname }} />
+    }
+
+    return children
+}
+
 function App() {
 
     return (
@@ -42,29 +58,145 @@ function App() {
                         element={<Home />}
                     />
 
-                    <Route path="/restaurants" element={<Restaurants />} />
-                    <Route path="/restaurants/:id" element={<RestaurantMenu />} />
+                    <Route
+                        path="/restaurants"
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <Restaurants />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/restaurants/:id"
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <RestaurantMenu />
+                            </ProtectedRoute>
+                        }
+                    />
 
                     <Route
                         path="/cart"
-                        element={<Cart />}
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <Cart />
+                            </ProtectedRoute>
+                        }
                     />
 
-                    <Route path="/orders" element={<MyOrders />} />
-                    <Route path="/orders/:id" element={<OrderDetails />} />
+                    <Route
+                        path="/orders"
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <MyOrders />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/orders/:id"
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <OrderDetails />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                    <Route path="/user/dashboard" element={<RoleDashboard role="customer" />} />
-                    <Route path="/admin/dashboard" element={<RoleDashboard role="admin" />} />
-                    <Route path="/admin/restaurants" element={<AdminRestaurants />} />
-                    <Route path="/admin/restaurants/create" element={<AdminRestaurantForm />} />
-                    <Route path="/admin/delivery-partners" element={<AdminDeliveryPartners />} />
-                    <Route path="/admin/orders" element={<AdminOrders />} />
-                    <Route path="/admin/menu/:restaurantId" element={<AdminMenu />} />
-                    <Route path="/admin/menu/create/:restaurantId" element={<AdminMenuForm />} />
-                    <Route path="/admin/delivery-partners/create" element={<AdminPartnerForm />} />
-                    <Route path="/delivery/dashboard" element={<RoleDashboard role="delivery" />} />
-                    <Route path="/delivery/orders" element={<DeliveryDashboard />} />
-                    <Route path="/delivery/order/:id" element={<DeliveryOrderDetails />} />
+                    <Route
+                        path="/user/dashboard"
+                        element={
+                            <ProtectedRoute allowedRoles={['USER']}>
+                                <RoleDashboard role="customer" />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/dashboard"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <RoleDashboard role="admin" />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/restaurants"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminRestaurants />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/restaurants/create"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminRestaurantForm />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/delivery-partners"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminDeliveryPartners />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/orders"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminOrders />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/menu/:restaurantId"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminMenu />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/menu/create/:restaurantId"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminMenuForm />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/admin/delivery-partners/create"
+                        element={
+                            <ProtectedRoute allowedRoles={['ADMIN']}>
+                                <AdminPartnerForm />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/delivery/dashboard"
+                        element={
+                            <ProtectedRoute allowedRoles={['DELIVERY_PARTNER']}>
+                                <RoleDashboard role="delivery" />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/delivery/orders"
+                        element={
+                            <ProtectedRoute allowedRoles={['DELIVERY_PARTNER']}>
+                                <DeliveryDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/delivery/order/:id"
+                        element={
+                            <ProtectedRoute allowedRoles={['DELIVERY_PARTNER']}>
+                                <DeliveryOrderDetails />
+                            </ProtectedRoute>
+                        }
+                    />
 
                 </Routes>
 

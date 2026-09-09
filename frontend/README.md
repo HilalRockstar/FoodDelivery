@@ -6,7 +6,7 @@ Foodie is the React customer interface for the FoodDelivery Spring Boot applicat
 
 - Node.js 18+
 - npm
-- The Spring Boot backend running on `http://localhost:8080` for authentication and server-side role pages
+- The Spring Boot backend running on `http://localhost:8080`
 
 ## Run Locally
 
@@ -25,44 +25,98 @@ npm run lint
 npm run preview
 ```
 
+## Authentication Flow
+
+The frontend now uses JWT-based authentication for API requests.
+
+### Login
+
+The login page sends a `POST` request to:
+
+- `POST /api/auth/login`
+
+The backend responds with:
+
+- `token`
+- `type`
+- `email`
+- `role`
+
+The frontend stores the token in `localStorage` and uses it for protected API calls via the `Authorization: Bearer <token>` header.
+
+### Role handling
+
+After a successful login, the frontend stores the returned role and uses it to protect routes.
+
+- `USER` -> customer pages
+- `ADMIN` -> admin pages
+- `DELIVERY_PARTNER` -> delivery pages
+
+### Logout
+
+The navbar sign-out button clears the token and role from local storage and calls the backend logout endpoint.
+
 ## Routes
 
-### Public and customer routes
+### Public routes
 
 - `/` - Foodie home page
+- `/login` - Login page
+- `/register` - Registration page
+
+### Protected customer routes
+
 - `/restaurants` - Restaurant directory
 - `/restaurants/:id` - Restaurant menu
 - `/cart` - Current cart and checkout action
 - `/orders` - Customer order history
-- `/login` - Spring Security login form
-- `/register` - Customer registration form
-
-### Role entry routes
-
 - `/user/dashboard` - Customer dashboard entry
-- `/admin/dashboard` - Admin dashboard entry
-- `/delivery/dashboard` - Delivery partner dashboard entry
 
-The backend remains the source of truth for authorization. After login, Spring Security redirects users based on their role:
+### Protected admin routes
 
-- `ROLE_USER` -> `/user/dashboard`
-- `ROLE_ADMIN` -> `/admin/dashboard`
-- `ROLE_DELIVERY_PARTNER` -> `/delivery/dashboard`
+- `/admin/dashboard`
+- `/admin/restaurants`
+- `/admin/restaurants/create`
+- `/admin/delivery-partners`
+- `/admin/delivery-partners/create`
+- `/admin/orders`
+- `/admin/menu/:restaurantId`
+- `/admin/menu/create/:restaurantId`
+
+### Protected delivery routes
+
+- `/delivery/dashboard`
+- `/delivery/orders`
+- `/delivery/order/:id`
 
 ## Backend Integration
 
-Authentication forms submit directly to the Spring Boot server:
+The frontend now integrates with these backend endpoints:
 
-- `POST /login`
+- `POST /api/auth/login`
 - `POST /register`
 - `POST /logout`
+- `GET /api/restaurants`
+- `GET /api/restaurants/:restaurantId/menu`
+- `GET /api/cart`
+- `GET /api/orders`
+- `GET /api/admin/...`
+- `GET /api/delivery/...`
 
-The API adapter in `src/services/api.js` follows the existing backend paths for restaurants, menus, carts, and orders. The current backend controllers return Thymeleaf HTML rather than JSON, so the frontend uses local fallback data when an endpoint does not return JSON. This keeps the React UI usable while preserving the existing backend implementation.
+The shared API helper in `src/services/api.js` automatically adds the JWT bearer token when available and redirects to login on `401` or `403` responses.
 
-To use a different backend host, set:
+### Environment variables
+
+Set the backend origin for the frontend using:
 
 ```bash
 VITE_BACKEND_URL=http://localhost:8080
+```
+
+If you want to point the frontend API layer to a different backend base path, also use:
+
+```bash
+VITE_API_BASE_URL=http://localhost:8080
 ```
 
 ## Project Structure
@@ -73,7 +127,7 @@ src/
   context/      Cart state provider
   hooks/        Cart and restaurant data hooks
   pages/        Customer, auth, and role dashboard screens
-  services/     Backend request adapters and fallback data
+  services/     Backend request adapters and JWT-aware API helpers
 ```
 
 The UI is responsive and designed for desktop and mobile widths. Backend Java and Thymeleaf files are kept outside this frontend project.

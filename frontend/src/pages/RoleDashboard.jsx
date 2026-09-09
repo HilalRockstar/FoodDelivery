@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './RoleDashboard.css'
 
 const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'
@@ -12,8 +12,23 @@ const dashboards = {
 function RoleDashboard({ role }) {
     const dashboard = dashboards[role]
     const usesBackendPages = false
+    const navigate = useNavigate()
 
-    return <main className="role-page"><div className="role-hero"><p className="eyebrow">{dashboard.eyebrow}</p><h1>{dashboard.title}</h1><p>{dashboard.copy}</p></div><section className="role-links">{dashboard.links.map(([label, path]) => usesBackendPages ? <a className="role-link" href={`${BACKEND_ORIGIN}${path}`} key={path + label}><span>{label}</span><strong>↗</strong></a> : <Link className="role-link" to={path} key={path + label}><span>{label}</span><strong>↗</strong></Link>)}</section><form action={`${BACKEND_ORIGIN}/logout`} method="post"><button className="logout-button" type="submit">Sign out</button></form></main>
+    async function handleSignOut() {
+        try {
+            await fetch(`${BACKEND_ORIGIN}/logout`, {
+                method: 'POST',
+                credentials: 'include',
+            })
+        } catch (error) {
+            // ignore backend logout errors and continue with local cleanup
+        }
+
+        localStorage.removeItem('jwtToken')
+        navigate('/login?logout')
+    }
+
+    return <main className="role-page"><div className="role-hero"><p className="eyebrow">{dashboard.eyebrow}</p><h1>{dashboard.title}</h1><p>{dashboard.copy}</p></div><section className="role-links">{dashboard.links.map(([label, path]) => usesBackendPages ? <a className="role-link" href={`${BACKEND_ORIGIN}${path}`} key={path + label}><span>{label}</span><strong>↗</strong></a> : <Link className="role-link" to={path} key={path + label}><span>{label}</span><strong>↗</strong></Link>)}</section><button className="logout-button" type="button" onClick={handleSignOut}>Sign out</button></main>
 }
 
 export default RoleDashboard

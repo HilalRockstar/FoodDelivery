@@ -1,16 +1,62 @@
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'
 
+function getToken() {
+    return localStorage.getItem('jwtToken') || ''
+}
+
+function clearToken() {
+    localStorage.removeItem('jwtToken')
+}
+
+function buildHeaders(options = {}) {
+    const headers = new Headers(options.headers || {})
+    const token = getToken()
+
+    if (token) {
+        headers.set('Authorization', `Bearer ${token}`)
+    }
+
+    return headers
+}
+
+function handleAuthFailure(response) {
+    if (response.status === 401 || response.status === 403) {
+        clearToken()
+        if (window.location.pathname !== '/login') {
+            window.location.assign('/login?error=expired')
+        }
+    }
+}
+
 async function request(path, options = {}) {
-    const response = await fetch(`${API_BASE}${path}`, { credentials: 'include', ...options })
+    const response = await fetch(`${API_BASE}${path}`, {
+        credentials: 'include',
+        ...options,
+        headers: buildHeaders(options),
+    })
+
+    if (!response.ok) {
+        handleAuthFailure(response)
+        throw new Error(`Request failed: ${response.status}`)
+    }
+
     const type = response.headers.get('content-type') || ''
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`)
     if (!type.includes('application/json')) throw new Error('Backend returned an HTML page')
     return response.json()
 }
 
 async function command(path, options = {}) {
-    const response = await fetch(`${API_BASE}${path}`, { credentials: 'include', ...options })
-    if (!response.ok) throw new Error(`Request failed: ${response.status}`)
+    const response = await fetch(`${API_BASE}${path}`, {
+        credentials: 'include',
+        ...options,
+        headers: buildHeaders(options),
+    })
+
+    if (!response.ok) {
+        handleAuthFailure(response)
+        throw new Error(`Request failed: ${response.status}`)
+    }
+
     return true
 }
 

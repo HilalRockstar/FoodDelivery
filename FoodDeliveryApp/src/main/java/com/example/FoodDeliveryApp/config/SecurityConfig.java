@@ -1,6 +1,8 @@
 package com.example.FoodDeliveryApp.config;
 
+import com.example.FoodDeliveryApp.security.CustomLoginSuccessHandler;
 import com.example.FoodDeliveryApp.security.CustomUserDetailsService;
+import com.example.FoodDeliveryApp.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,20 +11,23 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import com.example.FoodDeliveryApp.security.CustomLoginSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
         private final CustomUserDetailsService customUserDetailsService;
         private final CustomLoginSuccessHandler successHandler;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
         public SecurityConfig(
                         CustomUserDetailsService customUserDetailsService,
-                        CustomLoginSuccessHandler successHandler) {
+                        CustomLoginSuccessHandler successHandler,
+                        JwtAuthenticationFilter jwtAuthenticationFilter) {
 
                 this.customUserDetailsService = customUserDetailsService;
                 this.successHandler = successHandler;
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         }
 
         @Bean
@@ -51,6 +56,7 @@ public class SecurityConfig {
                                                 .requestMatchers(
                                                                 "/register",
                                                                 "/login",
+                                                                "/api/auth/login",
                                                                 "/css/**",
                                                                 "/js/**")
                                                 .permitAll()
@@ -92,7 +98,10 @@ public class SecurityConfig {
                                                 .logoutSuccessUrl("/login?logout")
                                                 .invalidateHttpSession(true)
                                                 .deleteCookies("JSESSIONID")
-                                                .permitAll());
+                                                .permitAll())
+                                .addFilterBefore(
+                                                jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
