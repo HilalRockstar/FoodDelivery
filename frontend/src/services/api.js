@@ -22,18 +22,22 @@ function buildHeaders(options = {}) {
 function handleAuthFailure(response) {
     if (response.status === 401 || response.status === 403) {
         clearToken()
-        if (window.location.pathname !== '/login') {
-            window.location.assign('/login?error=expired')
+        const loginPath = `${import.meta.env.BASE_URL}login?error=expired`
+        if (window.location.pathname !== `${import.meta.env.BASE_URL}login`) {
+            window.location.assign(loginPath)
         }
     }
 }
 
 async function request(path, options = {}) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
     const response = await fetch(`${API_BASE}${path}`, {
         credentials: 'include',
         ...options,
+        signal: options.signal || controller.signal,
         headers: buildHeaders(options),
-    })
+    }).finally(() => clearTimeout(timeout))
 
     if (!response.ok) {
         handleAuthFailure(response)
@@ -46,11 +50,14 @@ async function request(path, options = {}) {
 }
 
 async function command(path, options = {}) {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
     const response = await fetch(`${API_BASE}${path}`, {
         credentials: 'include',
         ...options,
+        signal: options.signal || controller.signal,
         headers: buildHeaders(options),
-    })
+    }).finally(() => clearTimeout(timeout))
 
     if (!response.ok) {
         handleAuthFailure(response)

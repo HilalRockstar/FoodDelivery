@@ -45,7 +45,7 @@ function App() {
 
         <CartProvider>
 
-            <BrowserRouter>
+            <BrowserRouter basename={import.meta.env.BASE_URL}>
 
                 <Navbar />
 
