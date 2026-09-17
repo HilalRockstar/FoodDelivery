@@ -6,8 +6,7 @@
 .auth-art > div { align-self:center; max-width:560px; padding:clamp(48px,8vh,110px) 0; position:relative; z-index:1; }
 .auth-art h1 { font-size:clamp(2.8rem,5.4vw,5.2rem); max-width:620px; position:relative; z-index:1; }
 .auth-art h1 + p { color:rgba(255,255,255,.7); font-size:1.05rem; line-height:1.6; margin-top:25px; max-width:360px; position:relative; z-index:1; }
-.auth-mark { align-items:center; background:var(--orange); border-radius:50%; color:var(--white); display:flex; font-family:'Space Grotesk'; font-size:clamp(5rem,12vw,12rem); font-weight:700; height:clamp(140px,20vw,280px); justify-content:center; justify-self:end; margin:0 clamp(0px,2vw,28px) clamp(-20px,-2vw,-8px) 0; transform:rotate(-10deg); width:clamp(140px,20vw,280px); z-index:1; }
-.auth-art-register .auth-mark { background:var(--lime); color:var(--green); }
+.auth-art-image { align-self:end; justify-self:end; margin:0 clamp(-28px,-2vw,-8px) clamp(-20px,-2vw,-8px) 0; max-width:min(76%,420px); object-fit:contain; position:relative; transform:rotate(-6deg); width:clamp(190px,24vw,360px); z-index:1; }
 .auth-form-panel { align-items:center; background:var(--paper); display:flex; justify-content:center; }
 .auth-form-wrap { max-width:430px; width:100%; }
 .auth-form-wrap h2 { font-size:clamp(2.4rem,4vw,4rem); line-height:1; margin-bottom:12px; }
@@ -22,4 +21,4 @@
 .auth-switch a { color:var(--green); font-weight:700; }
 .form-message { background:#eef5d6; color:var(--green); font-size:.8rem; margin-bottom:18px; padding:11px 13px; }
 .form-error { background:#fde9df; color:#9b4728; }
-@media (max-width:900px) { .auth-page { grid-template-columns:1fr; } .auth-art { min-height:390px; padding:28px 22px 38px; } .auth-art > div { align-self:end; padding:52px 0 25px; } .auth-art h1 { font-size:3rem; max-width:460px; } .auth-mark { font-size:5rem; height:150px; margin:0 -8px -35px 0; width:150px; } .auth-form-panel { min-height:calc(100svh - 390px); padding:56px 22px 64px; } }
+@media (max-width:900px) { .auth-page { grid-template-columns:1fr; } .auth-art { min-height:390px; padding:28px 22px 38px; } .auth-art > div { align-self:end; padding:52px 0 25px; } .auth-art h1 { font-size:3rem; max-width:460px; } .auth-art-image { margin:0 -10px -44px 0; max-width:190px; width:42vw; } .auth-form-panel { min-height:calc(100svh - 390px); padding:56px 22px 64px; } }
